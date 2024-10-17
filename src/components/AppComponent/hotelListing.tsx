@@ -1,47 +1,52 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Header from "@/components/hotelListingComponents/roomAmenities";
 import HotelCardDetails from "@/components/hotelListingComponents/HotelCardDetails";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import 'regenerator-runtime/runtime';
 import toast from "react-hot-toast";
-import axios from 'axios'; // Import axios for the Amadeus API call
-import { getHotelsByCity, getHotelById } from '@/api/hotel';
+import { getHotelsByCity } from '@/api/hotel';
 
-export type Hotel = {
-  _id: string;
-  user_id?: string;
-  property_name: string;
-  property_email: string;
-  property_contact: string;
-  description: string;
-  image: string[];
-  isDraft: boolean;
-  property_address?: {
-    city: string;
-    country: string;
-    state: string;
-    street: string;
-    zip: string;
+interface GeoCode {
+  latitude: number;
+  longitude: number;
+}
+
+interface Address {
+  countryCode: string;
+}
+
+interface Distance {
+  value: number;
+  unit: string;
+}
+
+interface Hotel {
+  chainCode: string;
+  iataCode: string;
+  dupeId: number;
+  name: string;
+  hotelId: string;
+  geoCode: GeoCode;
+  address: Address;
+  distance: Distance;
+  lastUpdate: string;
+}
+
+interface HotelResponse {
+  data: Hotel[];
+  meta: {
+    count: number;
+    links: {
+      self: string;
+    };
   };
-  property_amenities: string;
-  property_category: string;
-  property_code: string;
-  property_room: string[];
-  property_type: string;
-  rate_plan: string;
-  room_Aminity: string;
-  star_rating: string;
-  __v: number;
-  [key: string]: any;
-};
+}
 
 const HotelList: React.FC = () => {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const [params, setParams] = useState<{ location?: string; destination?: string; url?: string }>({});
   const [allHotels, setAllHotels] = useState<Hotel[]>([]);
   const [filteredHotels, setFilteredHotels] = useState<Hotel[]>([]);
@@ -75,20 +80,12 @@ const HotelList: React.FC = () => {
 
     try {
       const hotelsResponse = await getHotelsByCity(searchTerm);
-      const hotels = hotelsResponse.data;
-      
-      // Fetch detailed information for each hotel
-      const detailedHotels = await Promise.all(
-        hotels.map(async (hotel: any) => {
-          const detailedHotel = await getHotelById(hotel.hotelId);
-          return { ...hotel, ...detailedHotel.data };
-        })
-      );
+      const hotels = hotelsResponse.data as Hotel[];
 
-      setAllHotels(detailedHotels);
-      setFilteredHotels(detailedHotels);
-      
-      if (detailedHotels.length === 0) {
+      setAllHotels(hotels);
+      setFilteredHotels(hotels);
+
+      if (hotels.length === 0) {
         toast.error('No hotels found for the given search criteria.');
       }
     } catch (error) {
@@ -125,7 +122,6 @@ const HotelList: React.FC = () => {
     </>
   );
 
-  
   const renderHotels = () => {
     if (isLoading) return renderLoadingSkeleton();
 
@@ -140,7 +136,7 @@ const HotelList: React.FC = () => {
     return filteredHotels.map((hotel: Hotel, index: number) => (
       <Link href={`/hotel?id=${hotel.hotelId}`} key={`${hotel.hotelId}-${index}`} passHref>
         <div className="mb-8 transition-all duration-300 ease-in-out transform hover:scale-105">
-          <HotelCardDetails hotelData={hotel} key={""} />
+          <HotelCardDetails hotelData={hotel} />
         </div>
       </Link>
     ));

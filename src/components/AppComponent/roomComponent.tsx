@@ -1,288 +1,267 @@
 "use client";
-import 'regenerator-runtime/runtime';
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
-import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import { FaStar, FaWifi, FaSnowflake, FaKitchenSet, FaFireFlameCurved, FaSmoking } from "react-icons/fa6";
+import { FaStar, FaWifi, FaSnowflake, FaKitchenSet, FaFireFlameCurved } from "react-icons/fa6";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import toast from 'react-hot-toast';
-
-import Header from "@/components/hotelListingComponents/roomAmenities";
-import { RoomSpeechToText } from "@/components/NLP/roomSpeechToText";
-import { roomsByProperty } from "@/api/hotel";
+import Modal from "@/components/ui/modal/Modal"; // Assuming you have a Modal component
+import toast from "react-hot-toast";
+import axios from "axios";
+import Link from "next/link";
 
 // Define interfaces for type safety
-interface Room {
-  _id: string;
-  room_name?: string;
-  room_type?: string;
-  total_room?: number;
-  floor?: number;
-  room_view?: string;
-  room_size?: number;
-  room_unit?: String;
-  smoking_policy?: string;
-  max_occupancy?: number;
-  max_number_of_adults?: number;
-  max_number_of_children?: number;
-  number_of_bedrooms?: number;
-  number_of_living_room?: number;
-  extra_bed?: number;
-  description?: string;
-  image?: string[];
-  meal_plan: string;
-  rateplan_id: string;
-  room_price: number; 
+interface HotelOffer {
+  type: string;
+  hotel: {
+    hotelId: string;
+    name: string;
+    cityCode: string;
+  };
+  offers: Array<{
+    id: string;
+    checkInDate: string;
+    checkOutDate: string;
+    room: {
+      type: string;
+      typeEstimated: {
+        category: string;
+        beds: number;
+        bedType: string;
+      };
+      description: {
+        text: string;
+        lang: string;
+      };
+    };
+    price: {
+      currency: string;
+      base: string;
+      total: string;
+    };
+    policies: {
+      cancellations: Array<{
+        description: {
+          text: string;
+        };
+        type: string;
+      }>;
+      paymentType: string;
+    };
+  }>;
 }
 
-interface RoomAmenity {
-  _id: string;
-  amenities: string[];
+interface HotelOffersResponse {
+  data: HotelOffer[];
 }
 
-interface RoomsApiResponse {
-  data: Room[];
-}
+// API function to fetch hotel offers
+const getMultiHotelOffer = async (hotelId: string, adults: number, checkIn: string) => {
+  try {
+    const result = await axios.get(
+      `http://localhost:8080/api/v1/amadeus/shopping-/hotels-offer?hotelId=${hotelId}&adults=${adults}&checkIn=${checkIn}`
+    );
+    return result.data;
+  } catch (error) {
+    console.error("Error fetching hotel offers:", error);
+    throw error;
+  }
+};
 
 // Main component
 const RoomsPage: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const propertyId = searchParams.get("id");
+  const checkInDate = searchParams.get("checkIn") || "2024-10-17"; // Default check-in date
+  const adults = Number(searchParams.get("adults")) || 1; // Default adults
 
   // State management
-  const [rooms, setRooms] = useState<RoomsApiResponse | null>(null);
-  const [roomAmenitiesData, setRoomAmenitiesData] = useState<{ [key: string]: RoomAmenity }>({});
+  const [hotelOffers, setHotelOffers] = useState<HotelOffersResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [dateRange, setDateRange] = useState<string>("");
-  const [jsonStoredData, setJsonStoredData] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedOffer, setSelectedOffer] = useState<HotelOffer["offers"][0] | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // Check user login status
 
-  const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
-  const [text, setText] = useState<string>('');
-  const [listening, setListening] = useState<boolean>(false);
-
-  const apiKey = process.env.NEXT_PUBLIC_OPENAI_KEY || '';
-
-  // Fetch rooms data
+  // Fetch hotel offers
   useEffect(() => {
-    const fetchRoomsData = async () => {
+    const fetchHotelOffers = async () => {
       if (!propertyId) return;
 
       setIsLoading(true);
       try {
-        const response = await roomsByProperty(propertyId);
-        if (typeof response === "object" && response !== null) {
-          const roomsData = response as RoomsApiResponse;
-          setRooms(roomsData);
-          console.log("Rooms data fetched:", roomsData);
-
-          // Fetch amenities for each room (commented out for now)
-          // const amenitiesPromises = roomsData.data.map(room => 
-          //   roomAmenities(room._id).catch(error => {
-          //     console.error(`Error fetching amenities for room ${room._id}:`, error);
-          //     return null;
-          //   })
-          // );
-
-          // const amenitiesResults = await Promise.all(amenitiesPromises);
-          // const newRoomAmenitiesData = amenitiesResults.reduce((acc, amenities, index) => {
-          //   if (amenities && isRoomAmenity(amenities)) {
-          //     acc[roomsData.data[index]._id] = amenities;
-          //   }
-          //   return acc;
-          // }, {} as { [key: string]: RoomAmenity });
-
-          // setRoomAmenitiesData(newRoomAmenitiesData);
-        } else {
-          console.error("Unexpected response format:", response);
-          toast.error("Something went wrong. Please try again later.");
-        }
+        const response = await getMultiHotelOffer(propertyId, adults, checkInDate);
+        console.log("Hotel offers:", response);
+        setHotelOffers(response);
+        
+        // Simulate checking login status (you can use real logic here, like checking tokens)
+        const userLoggedIn = true; // Replace this with actual login status check
+        setIsLoggedIn(userLoggedIn);
       } catch (error) {
-        console.error("Error fetching rooms:", error);
-        toast.error("Unable to load rooms. Please try again later.");
+        console.error("Error fetching hotel offers:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchRoomsData();
-  }, [propertyId]);
+    fetchHotelOffers();
+  }, [propertyId, adults, checkInDate]);
 
-  // Set date range
-  useEffect(() => {
-    const today = new Date();
-    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-    setDateRange(`${today.toLocaleDateString()} - ${nextWeek.toLocaleDateString()}`);
-  }, []);
-
-  // Handle speech recognition results
-  const handleSpeechResults = useCallback(() => {
-    if (!jsonStoredData || !jsonStoredData.RoomName || !rooms) return;
-
-    console.log("JSON Stored Data:", jsonStoredData);
-    console.log("Looking for room:", jsonStoredData.RoomName);
-
-    const matchingRoom = rooms.data.find(room => 
-      room.room_name?.toLowerCase().includes(jsonStoredData.RoomName.toLowerCase())
-    );
-
-    if (matchingRoom) {
-      console.log("Matching room found:", matchingRoom);
-      toast.success(`Room "${matchingRoom.room_name}" found! Redirecting to booking page.`, {
-        duration: 3000,
-        icon: '🎉',
-      });
-      setTimeout(() => {
-        router.push(`/booking?id=${propertyId}&roomId=${matchingRoom._id}`);
-      }, 3000);
+  // Function to handle booking now
+  const handleBookNow = (offer: HotelOffer["offers"][0]) => {
+    if (!isLoggedIn) {
+      // Redirect to login if not logged in
+      router.push("/login");
     } else {
-      console.log("No matching room found");
-      toast.error(`Sorry, I couldn't find a room named "${jsonStoredData.RoomName}". Please try again with a different room name.`, {
-        duration: 5000,
-        icon: '🔍',
-      });
+      // Open modal if logged in
+      setSelectedOffer(offer);
+      setIsModalOpen(true);
     }
-  }, [jsonStoredData, rooms, propertyId, router]);
+  };
 
-  useEffect(() => {
-    handleSpeechResults();
-  }, [handleSpeechResults]);
+  // Function to proceed with booking
+  const confirmBooking = () => {
+    if (selectedOffer) {
+      router.push(`/booking/${hotelOffers?.data[0].hotel.hotelId}/${selectedOffer.id}`);
+    }
+  };
 
   return (
-    <>
-      <Header tag={"Rooms Details"} />
-
-      <div className="container mx-auto mt-6 px-4">
-        {/* Header section */}
-        <div className="flex justify-between items-center mb-6 p-4 ">
-          <h1 className="text-2xl font-semibold text-gray-800">Rooms in Property</h1>
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-blue-600 transition-colors duration-300 shadow-md">
-              <span>{rooms?.data?.length || 0}</span>
-              <span className="ml-2">results</span>
-            </div>
-            <div className="flex items-center bg-red-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-red-600 transition-colors duration-300 shadow-md">
-              <span>{dateRange}</span>
-            </div>
+    <div className="container mx-auto mt-6 px-4">
+      {/* Header section */}
+      <div className="flex justify-between items-center mb-6 p-4">
+        <h1 className="text-2xl font-semibold text-gray-800">Available Rooms</h1>
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium">
+            <span>{hotelOffers?.data[0]?.offers?.length || 0} results</span>
           </div>
-        </div>
-
-        {/* Speech-to-text component */}
-        <div className="mb-8">
-          <RoomSpeechToText
-            apiKey={apiKey}
-            SpeechRecognition={SpeechRecognition}
-            resetTranscript={resetTranscript}
-            browserSupportsSpeechRecognition={browserSupportsSpeechRecognition}
-            transcript={transcript}
-            setJsonStoredData={setJsonStoredData}
-            mic_color="black"
-            mic_bg_color="white"
-            listening={listening}
-            setText={setText}
-            text={text}
-          />
-        </div>
-
-        {/* Loading state */}
-        {isLoading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, index) => (
-              <div key={index} className="bg-gray-300 h-96 rounded-lg animate-pulse"></div>
-            ))}
+          <div className="flex items-center bg-red-500 text-white px-4 py-2 rounded-full text-sm font-medium">
+            <span>{checkInDate}</span>
           </div>
-        )}
-
-        {/* No rooms available state */}
-        {!isLoading && rooms?.data?.length === 0 && <p className="text-center text-xl">No rooms available.</p>}
-
-        {/* Room cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {rooms?.data?.map((room: Room) => (
-            <RoomCard key={room._id} propertyId={propertyId} room={room} amenities={roomAmenitiesData[room._id]?.amenities || []} />
-          ))}
         </div>
       </div>
-    </>
+
+      {/* Loading state */}
+      {isLoading && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, index) => (
+            <div key={index} className="bg-gray-300 h-96 rounded-lg animate-pulse"></div>
+          ))}
+        </div>
+      )}
+
+      {/* No offers available state */}
+      {!isLoading && (!hotelOffers?.data[0]?.offers || hotelOffers.data[0].offers.length === 0) && (
+        <p className="text-center text-xl">No rooms available for these dates.</p>
+      )}
+
+      {/* Room cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {hotelOffers?.data[0]?.offers.map((offer) => (
+          <RoomCard 
+            key={offer.id} 
+            offer={offer}
+            hotelId={hotelOffers.data[0].hotel.hotelId}
+            onBookNow={() => handleBookNow(offer)} // Pass the handler
+          />
+        ))}
+      </div>
+
+{/* Modal for booking confirmation */}
+{isModalOpen && selectedOffer && (
+  <Modal onClose={() => setIsModalOpen(false)} isOpen={isModalOpen}>
+    <div className="p-4">
+      <h2 className="text-xl font-semibold mb-4">Confirm Your Booking</h2>
+      <p>Room: {selectedOffer.room.typeEstimated.category}</p>
+      <p>Price: {selectedOffer.price.currency} {selectedOffer.price.total}</p>
+      <div className="flex justify-end mt-4">
+        <button 
+          onClick={confirmBooking} 
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-500">
+          Book Now
+        </button>
+        <button 
+          onClick={() => setIsModalOpen(false)} 
+          className="ml-2 bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-200">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </Modal>
+)}
+
+    </div>
   );
 };
 
-// Helper function to get icon for amenity
-const getAmenityIcon = (amenity: string) => {
-  switch (amenity.toLowerCase()) {
-    case "wifi": return <FaWifi />;
-    case "air conditioning": return <FaSnowflake />;
-    case "kitchen": return <FaKitchenSet />;
-    case "heating": return <FaFireFlameCurved />;
-    case "smoking": return <FaSmoking />;
-    default: return null;
-  }
-};
-
 // RoomCard component
-const RoomCard: React.FC<{ room: Room; amenities: string[], propertyId: string | null }> = ({ room, amenities, propertyId }) => (
-  <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group">
-    <div className="relative w-full h-48">
-      {room.image && room.image.length > 0 && (
+const RoomCard: React.FC<{ 
+  offer: HotelOffer["offers"][0];
+  hotelId: string;
+  onBookNow: () => void; // Accept book now handler as prop
+}> = ({ offer, hotelId, onBookNow }) => {
+  // Helper function to get room amenities based on room type
+  const getRoomAmenities = (roomType: string) => {
+    const defaultAmenities = [
+      { icon: <FaWifi />, name: "Free WiFi" },
+      { icon: <FaSnowflake />, name: "Air Conditioning" },
+      { icon: <FaKitchenSet />, name: "Mini Bar" },
+      { icon: <FaFireFlameCurved />, name: "Heating" },
+    ];
+    return defaultAmenities;
+  };
+
+  return (
+    <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group">
+      <div className="relative w-full h-48">
         <Image
           priority
-          src={room.image[0]}
-          alt={"Room image"}
+          src="/api/placeholder/400/300"
+          alt="Room image"
           layout="fill"
           objectFit="cover"
           className="w-full h-full object-cover"
         />
-      )}
-    </div>
-    <CardHeader>
-      <CardTitle className="text-2xl text-blue-600">{room.room_name}</CardTitle>
-      <CardDescription className="text-gray-600">{room.description}</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <div className="flex flex-wrap gap-3 mb-4">
-        {amenities.map((amenity, index) => (
-          <div key={index} className="flex items-center gap-1 text-sm text-red-600 group-hover:text-green-600 transition-colors duration-300">
-            {getAmenityIcon(amenity)}
-            <span>{amenity}</span>
-          </div>
-        ))}
       </div>
-      <div className="flex justify-between items-center">
-        <div>
-          <span className="text-2xl font-bold text-blue-600">Rs. {room.room_price}</span>
-          <span className="text-zinc-800 ml-1">/night</span>
+      <CardHeader>
+        <CardTitle className="text-2xl text-blue-600">
+          {offer.room.typeEstimated.category} - {offer.room.typeEstimated.bedType}
+        </CardTitle>
+        <CardDescription className="text-gray-600">
+          {offer?.room?.description?.text}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap gap-3 mb-4">
+          {getRoomAmenities(offer.room.type).map((amenity, index) => (
+            <div key={index} className="flex items-center gap-1 text-sm text-red-600">
+              {amenity.icon}
+              <span>{amenity.name}</span>
+            </div>
+          ))}
         </div>
-        <span className="text-gray-500 text-sm">Capacity: {room.max_occupancy} persons </span>
-      </div>
-    </CardContent>
-    <CardFooter className="flex justify-between items-center bg-gray-50">
-      <div className="flex items-center gap-2">
-        <span className="text-xl font-medium text-green-600">4.0</span>
-        <FaStar />
-        <span className="text-sm text-gray-600">(7 Reviews)</span>
-      </div>
-      <Link
-        href={`/booking?id=${propertyId}&roomId=${room._id}`}
-        className="bg-red-600 text-white px-6 py-2 rounded-full hover:bg-green-600 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-      >
-        Book Now
-      </Link>
-    </CardFooter>
-  </Card>
-);
-
-// Type guard function to check if the response is of type RoomAmenity
-function isRoomAmenity(response: unknown): response is RoomAmenity {
-  return (
-    typeof response === "object" &&
-    response !== null &&
-    "_id" in response &&
-    "amenities" in response &&
-    Array.isArray((response as RoomAmenity).amenities)
+        <div className="flex items-center text-yellow-500 mb-2">
+          <FaStar />
+          <FaStar />
+          <FaStar />
+          <FaStar />
+          <FaStar />
+        </div>
+        <div className="text-lg font-bold text-gray-800">
+          {offer.price.currency} {offer.price.total}
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-between items-center">
+        <p className="text-sm text-gray-500">Policies: {offer.policies.paymentType}</p>
+        <button
+          onClick={onBookNow} // Trigger book now handler
+          className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-500"
+        >
+          Book Now
+        </button>
+      </CardFooter>
+    </Card>
   );
-}
+};
 
 export default RoomsPage;

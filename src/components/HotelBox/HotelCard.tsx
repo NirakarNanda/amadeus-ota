@@ -12,7 +12,6 @@ import axios from "axios";
 import HotelCardDetails from "../hotelListingComponents/HotelCardDetails";
 import GuestBox from "./GuestBox";
 import { getHotelsByCity } from '@/api/hotel';
-import { getIATACode } from '@/utils/dynamicIataLookup';  
 
 // Define interfaces
 interface JsonStoredData {
@@ -94,10 +93,7 @@ const HotelCard = () => {
     setLoading(true);
     setError(null);
     try {
-      // Convert city name to IATA code using dynamic lookup
-      const searchLocation = getIATACode(location);
-
-      const hotelData = await getHotelsByCity(searchLocation);
+      const hotelData = await getHotelsByCity(location);
       setHotels(hotelData.data || []);
     } catch (error) {
       setError("Failed to fetch properties. Please try again.");
