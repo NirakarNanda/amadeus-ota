@@ -202,18 +202,6 @@ const HotelCard = () => {
       {/* Error and loading states */}
       {error && <div className="text-red-500 font-semibold mt-4">Error: {error}</div>}
       {loading && <div className="text-blue-500 font-semibold mt-4">Loading...</div>}
-
-      {/* Hotel results section */}
-      {hotels.length > 0 && (
-        <section className="mt-8">
-          <h1 className="text-2xl font-semibold mb-6">Search Results</h1>
-          <div className="grid grid-cols-1 gap-4">
-            {hotels.map((hotel) => (
-              <HotelCardDetails hotelData={hotel} key={""} />
-            ))}
-          </div>
-        </section>
-      )}
     </>
   );
 };
