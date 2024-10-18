@@ -68,7 +68,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({ offer, hotelId, onBookNow })
       </div>
       <CardHeader>
         <CardTitle className="text-2xl text-blue-600">
-          {offer.room.typeEstimated.category} - {offer.room.typeEstimated.bedType}
+          {offer?.room?.typeEstimated?.category} - {offer?.room?.typeEstimated?.bedType}
         </CardTitle>
         <CardDescription className="text-gray-600">
           {offer?.room?.description?.text}
@@ -91,11 +91,11 @@ export const RoomCard: React.FC<RoomCardProps> = ({ offer, hotelId, onBookNow })
           <FaStar />
         </div>
         <div className="text-lg font-bold text-gray-800">
-          {offer.price.currency} {offer.price.total}
+          {offer?.price?.currency} {offer?.price?.total}
         </div>
       </CardContent>
       <CardFooter className="flex justify-between items-center">
-        <p className="text-sm text-gray-500">Policies: {offer.policies.paymentType}</p>
+        <p className="text-sm text-gray-500">Policies: {offer?.policies?.paymentType}</p>
         <button
           onClick={onBookNow}
           className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-500"

@@ -203,11 +203,11 @@ const HotelList: React.FC = () => {
           </div>
           <div className="lg:w-1/3">
             <div className="lg:sticky lg:top-0">
-              <Card>
+              {/* <Card>
                 <div className="bg-gray-200 h-96 rounded-lg flex items-center justify-center">
                   {filteredHotels.length > 0 ? <p>Map Placeholder</p> : null}
                 </div>
-              </Card>
+              </Card> */}
             </div>
           </div>
         </div>

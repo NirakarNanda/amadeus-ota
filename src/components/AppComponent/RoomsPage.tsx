@@ -2,10 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { FaStar } from "react-icons/fa6";
+import { Card } from "@/components/ui/card";
 import Modal from "@/components/ui/modal/Modal";
 import axios from "axios";
-import { RoomCard } from "./RoomCard";
+import { RoomCard } from "@/components/AppComponent/RoomCard"; // Import the separate RoomCard component
 
+// Define interfaces for type safety
 interface HotelOffer {
   type: string;
   hotel: {
@@ -50,6 +53,7 @@ interface HotelOffersResponse {
   data: HotelOffer[];
 }
 
+// API function to fetch hotel offers
 const getMultiHotelOffer = async (hotelId: string, adults: number, checkIn: string) => {
   try {
     const result = await axios.get(
@@ -66,7 +70,7 @@ const RoomsPage: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const propertyId = searchParams.get("id");
-  const checkInDate = searchParams.get("checkin") || "2024-10-17";
+  const checkInDate = searchParams.get("checkIn") || "2024-11-20";
   const adults = Number(searchParams.get("adults")) || 1;
 
   const [hotelOffers, setHotelOffers] = useState<HotelOffersResponse | null>(null);
@@ -82,10 +86,7 @@ const RoomsPage: React.FC = () => {
       setIsLoading(true);
       try {
         const response = await getMultiHotelOffer(propertyId, adults, checkInDate);
-        console.log("Hotel offers:", response);
         setHotelOffers(response);
-        const userLoggedIn = true;
-        setIsLoggedIn(userLoggedIn);
       } catch (error) {
         console.error("Error fetching hotel offers:", error);
       } finally {
@@ -97,22 +98,19 @@ const RoomsPage: React.FC = () => {
   }, [propertyId, adults, checkInDate]);
 
   const handleBookNow = (offer: HotelOffer["offers"][0]) => {
-    if (!isLoggedIn) {
-      router.push("/login");
-    } else {
-      setSelectedOffer(offer);
-      setIsModalOpen(true);
-    }
+    setSelectedOffer(offer);
+    setIsModalOpen(true);
   };
 
   const confirmBooking = () => {
     if (selectedOffer) {
-      router.push(`/booking/${hotelOffers?.data[0].hotel.hotelId}/${selectedOffer.id}`);
+      router.push(`/payment?amount=${selectedOffer.price.total}&offerId=${selectedOffer.id}&currency=${selectedOffer.price.currency}`);
     }
   };
 
   return (
     <div className="container mx-auto mt-6 px-4">
+      {/* Header section */}
       <div className="flex justify-between items-center mb-6 p-4">
         <h1 className="text-2xl font-semibold text-gray-800">Available Rooms</h1>
         <div className="flex items-center space-x-4">
@@ -125,6 +123,7 @@ const RoomsPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Loading state */}
       {isLoading && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, index) => (
@@ -133,10 +132,12 @@ const RoomsPage: React.FC = () => {
         </div>
       )}
 
+      {/* No offers available state */}
       {!isLoading && (!hotelOffers?.data[0]?.offers || hotelOffers.data[0].offers.length === 0) && (
         <p className="text-center text-xl">No rooms available for these dates.</p>
       )}
 
+      {/* Room cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {hotelOffers?.data[0]?.offers.map((offer) => (
           <RoomCard 
@@ -148,6 +149,7 @@ const RoomsPage: React.FC = () => {
         ))}
       </div>
 
+      {/* Modal for booking confirmation */}
       {isModalOpen && selectedOffer && (
         <Modal onClose={() => setIsModalOpen(false)} isOpen={isModalOpen}>
           <div className="p-4">
@@ -156,13 +158,15 @@ const RoomsPage: React.FC = () => {
             <p>Price: {selectedOffer.price.currency} {selectedOffer.price.total}</p>
             <div className="flex justify-end mt-4">
               <button 
-                onClick={confirmBooking} 
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-500">
-                Book Now
+                onClick={confirmBooking}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-500"
+              >
+                Pay Now
               </button>
               <button 
-                onClick={() => setIsModalOpen(false)} 
-                className="ml-2 bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-200">
+                onClick={() => setIsModalOpen(false)}
+                className="ml-2 bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-200"
+              >
                 Cancel
               </button>
             </div>
