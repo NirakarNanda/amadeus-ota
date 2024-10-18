@@ -73,7 +73,7 @@ const RoomsPage: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const propertyId = searchParams.get("id");
-  const checkInDate = searchParams.get("checkIn") || "2024-10-17"; // Default check-in date
+  const checkInDate = searchParams.get("checkIn") || "2024-11-20"; // Default check-in date
   const adults = Number(searchParams.get("adults")) || 1; // Default adults
 
   // State management
@@ -122,7 +122,8 @@ const RoomsPage: React.FC = () => {
   // Function to proceed with booking
   const confirmBooking = () => {
     if (selectedOffer) {
-      router.push(`/booking/${hotelOffers?.data[0].hotel.hotelId}/${selectedOffer.id}`);
+      // router.push(`/booking/${hotelOffers?.data[0].hotel.hotelId}/${selectedOffer.id}`);
+      router.push(`/payment?amount=${selectedOffer.price.total}&offerId=${selectedOffer.id}&currency=${selectedOffer.price.currency}`);
     }
   };
 
@@ -252,7 +253,7 @@ const RoomCard: React.FC<{
         </div>
       </CardContent>
       <CardFooter className="flex justify-between items-center">
-        <p className="text-sm text-gray-500">Policies: {offer.policies.paymentType}</p>
+        <p className="text-sm text-gray-500">Policies: {offer?.policies?.paymentType}</p>
         <button
           onClick={onBookNow} // Trigger book now handler
           className="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-500"
