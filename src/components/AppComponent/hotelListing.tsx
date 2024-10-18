@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from 'next/navigation';
-import Header from "@/components/hotelListingComponents/roomAmenities";
+import Header from "@/components/HotelBox/Header";
 import HotelCardDetails from "@/components/hotelListingComponents/HotelCardDetails";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
@@ -35,14 +35,13 @@ interface Hotel {
   lastUpdate: string;
 }
 
-interface HotelResponse {
-  data: Hotel[];
-  meta: {
-    count: number;
-    links: {
-      self: string;
-    };
+interface FilterState {
+  amenities: string[];
+  priceRange: {
+    min: number | undefined;
+    max: number | undefined;
   };
+  sortOrder: string;
 }
 
 const HotelList: React.FC = () => {
@@ -56,6 +55,7 @@ const HotelList: React.FC = () => {
 
   const destination = searchParams.get("destination");
   const location = searchParams.get("location");
+  const checkinDate = searchParams.get("checkin");
 
   useEffect(() => {
     if (location) {
@@ -103,6 +103,53 @@ const HotelList: React.FC = () => {
     }
   };
 
+  const handleLocationChange = (newLocation: string) => {
+    if (newLocation) {
+      setParams({ location: newLocation, url: "search" });
+    }
+  };
+
+  // const handleFilterChange = (filters: FilterState) => {
+  //   let filtered = [...allHotels];
+
+  //   // Apply price filter
+  //   if (filters.priceRange.min !== undefined || filters.priceRange.max !== undefined) {
+  //     filtered = filtered.filter(hotel => {
+  //       // Note: Add price filtering logic based on your hotel data structure
+  //       return true; // Placeholder
+  //     });
+  //   }
+
+  //   // Apply amenities filter
+  //   if (filters.amenities.length > 0) {
+  //     filtered = filtered.filter(hotel => {
+  //       // Note: Add amenities filtering logic based on your hotel data structure
+  //       return true; // Placeholder
+  //     });
+  //   }
+
+  //   // Apply sorting
+  //   if (filters.sortOrder) {
+  //     filtered.sort((a, b) => {
+  //       switch (filters.sortOrder) {
+  //         case "price-asc":
+  //           // Add price sorting logic
+  //           return 0;
+  //         case "price-desc":
+  //           // Add price sorting logic
+  //           return 0;
+  //         case "rating":
+  //           // Add rating sorting logic
+  //           return 0;
+  //         default:
+  //           return 0;
+  //       }
+  //     });
+  //   }
+
+  //   setFilteredHotels(filtered);
+  // };
+
   const renderLoadingSkeleton = () => (
     <>
       {[...Array(3)].map((_, index) => (
@@ -134,7 +181,7 @@ const HotelList: React.FC = () => {
     }
 
     return filteredHotels.map((hotel: Hotel, index: number) => (
-      <Link href={`/hotel?id=${hotel.hotelId}`} key={`${hotel.hotelId}-${index}`} passHref>
+      <Link href={`/hotel?id=${hotel.hotelId}&checkin=${checkinDate}`} key={`${hotel.hotelId}-${index}`} passHref>
         <div className="mb-8 transition-all duration-300 ease-in-out transform hover:scale-105">
           <HotelCardDetails hotelData={hotel} />
         </div>
@@ -144,19 +191,24 @@ const HotelList: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <Header tag={`All hotels in ${location || destination}`} />
-      <div className="flex flex-col lg:flex-row gap-8">
-        <div className="lg:w-2/3">
-          <p className="text-gray-500 text-lg mb-4">{filteredHotels.length} stays in {location || destination}</p>
-          {renderHotels()}
-        </div>
-        <div className="lg:w-1/3">
-          <div className="lg:sticky lg:top-0">
-            <Card>
-              <div className="bg-gray-200 h-96 rounded-lg flex items-center justify-center">
-                {filteredHotels.length > 0 ? <p>Map Placeholder</p> : null}
-              </div>
-            </Card>
+      <Header 
+        onLocationChange={handleLocationChange}
+        // onFilterChange={handleFilterChange}
+      />
+      <div className="mt-8">
+        <p className="text-gray-500 text-lg mb-4">{filteredHotels.length} stays in {location || destination}</p>
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="lg:w-2/3">
+            {renderHotels()}
+          </div>
+          <div className="lg:w-1/3">
+            <div className="lg:sticky lg:top-0">
+              <Card>
+                <div className="bg-gray-200 h-96 rounded-lg flex items-center justify-center">
+                  {filteredHotels.length > 0 ? <p>Map Placeholder</p> : null}
+                </div>
+              </Card>
+            </div>
           </div>
         </div>
       </div>
