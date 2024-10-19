@@ -112,7 +112,7 @@ const Footer = (props: Props) => {
             <div className="flex  md:flex-row  md:space-y-0 md:space-x-6 md:items-start"> 
               {/* Company Section */}
               {/* <div className="flex flex-col"> */}
-              <div className="flex flex-col p-2">
+              <div className="flex flex-col p-2 cursor-pointer">
                 <header className="text-lg font-semibold mb-4">Company</header>
                 <div className="text-base mb-2 hover:underline">About Us</div>
                 <div className="text-base mb-2 hover:underline">Why Choose Us</div>
@@ -121,7 +121,7 @@ const Footer = (props: Props) => {
               </div>
   
               {/* Resources Section */}
-              <div className="flex flex-col p-2">
+              <div className="flex flex-col p-2 cursor-pointer">
                 <header className="text-lg font-semibold mb-4">Resources</header>
                 <div className="text-base mb-2 hover:underline">Privacy Policy</div>
                 <div className="text-base mb-2 hover:underline">Terms and Conditions</div>
@@ -130,7 +130,7 @@ const Footer = (props: Props) => {
               </div>
   
               {/* Product Section */}
-              <div className="flex flex-col p-2">
+              <div className="flex flex-col p-2 cursor-pointer">
                 <header className="text-lg font-semibold mb-4">Product</header>
                 <div className="text-base mb-2 hover:underline">Project Management</div>
                 <div className="text-base mb-2 hover:underline">Time Tracker</div>
