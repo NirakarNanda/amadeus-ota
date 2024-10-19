@@ -62,6 +62,7 @@ export default function PaymentSuccess(
           console.log("Failed to complete the booking. Please try again later.");
         }
       } catch (error: any) {
+        window.location.reload();
         console.error("Booking Error:", error);
       }
     };
