@@ -24,16 +24,13 @@ export default function Home() {
   return (
     <CheckAuthentication setLoading={setLoading}>
       <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 p-4 sm:p-8 md:p-12 flex items-center justify-center">
-        {/* Animated Background */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-0 -right-40 w-96 h-96 bg-purple-500/30 rounded-full mix-blend-multiply filter blur-xl animate-blob" />
           <div className="absolute bottom-0 -left-40 w-96 h-96 bg-blue-500/30 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000" />
         </div>
 
         <div className="w-full max-w-5xl">
-          {/* Main Content */}
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Left Side - Payment Summary */}
             <div className="backdrop-blur-lg bg-white/10 p-8 rounded-3xl border border-white/20 flex flex-col justify-center">
               <div className="space-y-6">
                 <div className="text-center md:text-left">
@@ -44,8 +41,6 @@ export default function Home() {
                     </span>
                   </div>
                 </div>
-
-                {/* Payment Benefits */}
                 <div className="space-y-4 mt-8">
                   <div className="flex items-center space-x-3 text-white/80">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,8 +61,6 @@ export default function Home() {
                     <span>24/7 Support Available</span>
                   </div>
                 </div>
-
-                {/* Security Badge */}
                 <div className="mt-8">
                   <div className="flex items-center justify-center md:justify-start space-x-2 text-white/70">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,8 +72,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
-            {/* Right Side - Payment Form */}
             <div className="backdrop-blur-lg bg-white/10 p-8 rounded-3xl border border-white/20">
               <h2 className="text-2xl font-medium text-white mb-6">Payment Details</h2>
               <Elements
