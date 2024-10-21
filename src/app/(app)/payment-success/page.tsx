@@ -53,7 +53,7 @@ export default function PaymentSuccess(
       };
 
       try {
-        const response = await axios.post("http://localhost:8080/api/v1/amadeus/booking/hotels-orders", payload);
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/amadeus/booking/hotels-orders`, payload);
         console.log("Book Response --------------------->", response);
 
         if (response.status === 200) {

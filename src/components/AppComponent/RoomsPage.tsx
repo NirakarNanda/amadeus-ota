@@ -57,7 +57,7 @@ interface HotelOffersResponse {
 const getMultiHotelOffer = async (hotelId: string, adults: number, checkIn: string) => {
   try {
     const result = await axios.get(
-      `http://localhost:8080/api/v1/amadeus/shopping-/hotels-offer?hotelId=${hotelId}&adults=${adults}&checkIn=${checkIn}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/amadeus/shopping-/hotels-offer?hotelId=${hotelId}&adults=${adults}&checkIn=${checkIn}`
     );
     return result.data;
   } catch (error) {

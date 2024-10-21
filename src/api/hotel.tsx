@@ -4,7 +4,7 @@ import Config from '../../config';
 
   export const getHotelsByCity = async (cityCode: string) => {
     try {
-      const result = await axios.get(`http://localhost:8080/api/v1/amadeus/hotels/by-city/${cityCode}`);
+      const result = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/amadeus/hotels/by-city/${cityCode}`);
       console.log("Hotels by city data:", result.data);
       return result.data;
     } catch (error) {
@@ -15,7 +15,7 @@ import Config from '../../config';
 
   export const getHotelById = async (hotelId: string) => {
     try {
-      const result = await axios.get(`http://localhost:8080/api/v1/amadeus/hotel/${hotelId}`);
+      const result = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/amadeus/hotel/${hotelId}`);
       console.log("Hotel data by ID:", result.data);
       return result.data;
     } catch (error) {
@@ -26,7 +26,7 @@ import Config from '../../config';
 
   export const getMultiHotelOffer = async (hotelId: string, adults: number, checkIn: string) => {
     try {
-      const result = await axios.get(`http://localhost:8080/api/v1/amadeus/shopping/hotels-offer?hotelId=${hotelId}&adults=${adults}&checkIn=${checkIn}`);
+      const result = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/amadeus/shopping/hotels-offer?hotelId=${hotelId}&adults=${adults}&checkIn=${checkIn}`);
       console.log("Hotel offers:", result.data);
       return result.data;
     } catch (error) {
@@ -37,7 +37,7 @@ import Config from '../../config';
 
   export const createHotelOrder = async (orderData: any) => {
     try {
-      const result = await axios.post('http://localhost:8080/api/v1/amadeus/booking/hotels-orders', orderData);
+      const result = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/amadeus/booking/hotels-orders`, orderData);
       console.log("Hotel order created:", result.data);
       return result.data;
     } catch (error) {

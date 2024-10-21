@@ -20,7 +20,7 @@ const CheckoutPage = ({ amount, offerId, currency }: { amount: number, offerId: 
   useEffect(() => {
     const fetchClientSecret = async () => {
       try {
-        const response = await axios.post("http://localhost:8080/api/v1/payment/create-payment-intent", {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/payment/create-payment-intent`, {
           amount: convertToSubcurrency(amount),
           offerId: offerId,
           currency: currency
