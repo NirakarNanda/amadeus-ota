@@ -40,49 +40,19 @@ const DateRange: React.FC<Props> = ({ dates, setDates }) => {
     : null;
 
   return (
-    <div className="date-range-picker">
+    <div className="">
       <RangePicker
         value={dayjsDates}
         onChange={handleDateChange}
         disabledDate={disabledDate}
+        suffixIcon={<></>}
         format="YYYY-MM-DD"
         picker="date"
         separator=" - "
         allowClear={false}
         placeholder={["Check-in Date", "Check-out Date"]}
-        suffixIcon={<></>}
-        style={{ border: "none", animation: "fade-in 0.3s ease-in-out" }} // Cool animation
-        className="custom-date-picker"
+        style={{ border: "none" }}
       />
-      <style jsx>{`
-        .custom-date-picker {
-          animation: fade-in 0.3s ease-in-out;
-        }
-
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        .ant-picker-dropdown {
-          animation: slide-down 0.3s ease-in-out;
-        }
-
-        @keyframes slide-down {
-          from {
-            transform: translateY(-10px);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-      `}</style>
     </div>
   );
 };

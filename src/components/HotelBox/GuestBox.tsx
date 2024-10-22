@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "@/Redux/store";
 import { setGuestDetails } from "@/Redux/slices/hotelcard.slice";
@@ -11,12 +12,8 @@ const GuestBox: React.FC = () => {
   const [rooms, setRooms] = useState(1);
   const [guests, setGuests] = useState(1);
   const [children, setChildren] = useState(0);
-  const [childAges, setChildAges] = useState(
-    Array.from({ length: 0 }, () => 0)
-  );
-  const [displayText, setDisplayText] = useState(
-    ` ${rooms} Rooms ${guests} Guests`
-  );
+  const [childAges, setChildAges] = useState(Array.from({ length: 0 }, () => 0));
+  const [displayText, setDisplayText] = useState(` ${rooms} Rooms ${guests} Guests`);
 
   const openModal = () => {
     setModalOpen(true);
@@ -69,133 +66,137 @@ const GuestBox: React.FC = () => {
   };
 
   return (
-    <div className="bg-white">
-  <div>
-    <div
-      id="selectedValues"
-      className="w-full p-2 rounded-md cursor-pointer"
-      onClick={openModal}
-    >
-      {displayText || "Select values"}
-    </div>
-  </div>
-
-  {modalOpen && (
-    <div
-      className={`absolute sm:mx-auto sm:left-0 sm:right-0 sm:w-[400px] md:w-[400px] lg:w-[40%] xl:w-[30%] mt-5 lg:mr-[125px]
-       xl:mr-[210px] rounded-md z-10 border-2 p-5 lg:mt-[-200px] sm:mt-[-100px] xl:mt-[-160px] bg-white grid grid-cols-2 gap-4
-        ${children > 0 && children <= 1 ? "xl:mt-[-200px] lg:mt-[-240px]" : ""} ${
-        children > 1 && children <= 2 ? "xl:mt-[-241px] lg:mt-[-251px]" : ""
-      } ${children > 2 && children <= 3 ? "lg:mt-[-330px] xl:mt-[-300px]" : ""} ${
-        children > 3 && children <= 4 ? "lg:mt-[-405px] xl:mt-[-380px]" : ""
-      }`}
-    >
-      {/* Rooms Section */}
-      <label className="mt-3">Rooms</label>
-      <div className="flex gap-2 items-center">
-        <button
-          className="bg-[#D80032] hover:bg-red-400 w-9 h-9 text-white flex items-center justify-center"
-          onClick={() => incDecHandler(setRooms, -1)}
-        >
-          -
-        </button>
-        <input
-          className="w-9 text-center border rounded"
-          type="number"
-          value={rooms}
-          readOnly
-          required
-        />
-        <button
-          className="bg-[#D80032] hover:bg-red-400 w-9 h-9 text-white flex items-center justify-center"
-          onClick={() => incDecHandler(setRooms, 1)}
-        >
-          +
-        </button>
-      </div>
-
-      {/* Guests Section */}
-      <label className="mt-3">Guests</label>
-      <div className="flex gap-2 items-center">
-        <button
-          className="bg-[#D80032] hover:bg-red-400 w-9 h-9 text-white flex items-center justify-center"
-          onClick={() => incDecHandler(setGuests, -1)}
-        >
-          -
-        </button>
-        <input
-          className="w-9 text-center border rounded"
-          type="number"
-          value={guests}
-          readOnly
-          required
-        />
-        <button
-          className="bg-[#D80032] hover:bg-red-400 w-9 h-9 text-white flex items-center justify-center"
-          onClick={() => incDecHandler(setGuests, 1)}
-        >
-          +
-        </button>
-      </div>
-
-      {/* Children Section */}
-      <label className="mt-4" htmlFor="modalChildren">
-        Children
-      </label>
-      <select
-        id="modalChildren"
-        name="modalChildren"
-        value={children}
-        onChange={(e) => handleChildrenChange(parseInt(e.target.value))}
-        className="p-2 border rounded-md bg-white"
+    <div className="relative bg-white">
+      <div
+        className="w-full px-3 py-2 border rounded-xl cursor-pointer hover:border-gray-400 transition-colors"
+        onClick={openModal}
       >
-        {[0, 1, 2, 3, 4].map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-
-      {/* Children Age Dropdowns */}
-      {Array.from({ length: children }).map((_, index) => (
-        <div key={index} className="col-span-2">
-          <label className="text-gray-600" htmlFor={`childAge${index + 1}`}>
-            Child {index + 1} Age
-          </label>
-          <select
-            id={`childAge${index + 1}`}
-            name={`childAge${index + 1}`}
-            value={childAges[index]}
-            onChange={(e) => handleChildAgeChange(index, parseInt(e.target.value))}
-            className="bg-white w-full p-2 border rounded-md"
-          >
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+        <div className="text-sm sm:text-base text-gray-700">
+          {displayText || "Select guests"}
         </div>
-      ))}
-
-      {/* Buttons */}
-      <div className="col-span-2 flex justify-center gap-4 mt-4">
-        <button
-          onClick={handleApplyChanges}
-          className="bg-[#D80032] hover:bg-red-500 text-white px-4 py-2 rounded"
-        >
-          Apply
-        </button>
-        <button
-          onClick={closeModal}
-          className="text-gray-500 hover:text-gray-700"
-        >
-          Cancel
-        </button>
       </div>
+
+      {modalOpen && (
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/30 z-40"
+            onClick={closeModal}
+          />
+
+          {/* Modal */}
+          <div className="fixed left-1/2 -top-20 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md z-50 bg-white rounded-2xl shadow-xl p-6 overflow-y-auto max-h-[80vh]">
+            <div className="space-y-6">
+              {/* Rooms Section */}
+              <div className="flex items-center justify-between">
+                <label className="text-gray-700">Rooms</label>
+                <div className="flex items-center gap-3">
+                  <button
+                    className="w-8 h-8 rounded-lg bg-[#D80032] hover:bg-red-500 text-white flex items-center justify-center transition-colors"
+                    onClick={() => incDecHandler(setRooms, -1)}
+                  >
+                    -
+                  </button>
+                  <span className="w-8 text-center">{rooms}</span>
+                  <button
+                    className="w-8 h-8 rounded-lg bg-[#D80032] hover:bg-red-500 text-white flex items-center justify-center transition-colors"
+                    onClick={() => incDecHandler(setRooms, 1)}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              {/* Guests Section */}
+              <div className="flex items-center justify-between">
+                <label className="text-gray-700">Guests</label>
+                <div className="flex items-center gap-3">
+                  <button
+                    className="w-8 h-8 rounded-lg bg-[#D80032] hover:bg-red-500 text-white flex items-center justify-center transition-colors"
+                    onClick={() => incDecHandler(setGuests, -1)}
+                  >
+                    -
+                  </button>
+                  <span className="w-8 text-center">{guests}</span>
+                  <button
+                    className="w-8 h-8 rounded-lg bg-[#D80032] hover:bg-red-500 text-white flex items-center justify-center transition-colors"
+                    onClick={() => incDecHandler(setGuests, 1)}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              {/* Children Section */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-gray-700" htmlFor="modalChildren">
+                    Children
+                  </label>
+                  <select
+                    id="modalChildren"
+                    value={children}
+                    onChange={(e) => handleChildrenChange(parseInt(e.target.value))}
+                    className="w-24 p-2 border rounded-lg bg-white focus:ring-2 focus:ring-[#D80032] focus:border-transparent"
+                  >
+                    {[0, 1, 2, 3, 4].map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Child Age Selectors */}
+                {children > 0 && (
+                  <div className="space-y-3 mt-4">
+                    {Array.from({ length: children }).map((_, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <label 
+                          className="text-gray-600 text-sm" 
+                          htmlFor={`childAge${index + 1}`}
+                        >
+                          Child {index + 1} Age
+                        </label>
+                        <select
+                          id={`childAge${index + 1}`}
+                          value={childAges[index]}
+                          onChange={(e) => handleChildAgeChange(index, parseInt(e.target.value))}
+                          className="w-24 p-2 border rounded-lg bg-white focus:ring-2 focus:ring-[#D80032] focus:border-transparent"
+                        >
+                          {Array.from({ length: 13 }, (_, i) => i + 1).map((age) => (
+                            <option key={age} value={age}>
+                              {age}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end gap-4 pt-4 border-t">
+                <button
+                  onClick={closeModal}
+                  className="px-4 py-2 text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleApplyChanges}
+                  className="px-6 py-2 bg-[#D80032] hover:bg-red-500 text-white rounded-lg transition-colors"
+                >
+                  Apply
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
-  )}
-</div>
-  )}
+  );
+};
 
 export default GuestBox;
