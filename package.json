@@ -1,12 +1,12 @@
 {
-  "name": "booking_engine_client",
+  "name": "amadeus_ota",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --port=3004",
     "clean": "rimraf .next",
     "build": "npm run clean && next build",
-    "start": "next start --port=3004",
+    "start": "next start --port=3001",
     "start:pm2": "npm run clean && npm run build && npm start",
     "lint": "next lint"
   },

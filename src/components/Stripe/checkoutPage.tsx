@@ -59,7 +59,7 @@ const CheckoutPage = ({ amount, offerId, currency }: { amount: number, offerId: 
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `http://www.localhost:3004/payment-success?amount=${amount}&offerId=${offerId}`,
+        return_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/payment-success?amount=${amount}&offerId=${offerId}`,
       },
     });
 
