@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { Providers } from "./provider";
 import Footer from "../components/layout/Footer";
 import Script from "next/script"; // Import the Script component
+import { FlightOffersStoreProvider } from "@/components/context/flight-offers-provider";
 
 const popins = Poppins({
   subsets: ["latin"],
@@ -33,7 +34,9 @@ export default function RootLayout({
       <body className={popins.className}>
         <Providers>
           <Navbar />
+          <FlightOffersStoreProvider>
           {children}
+        </FlightOffersStoreProvider>
           <Footer />
         </Providers>
         <Toaster position="top-right" />

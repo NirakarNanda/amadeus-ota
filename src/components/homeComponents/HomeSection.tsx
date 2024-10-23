@@ -169,7 +169,7 @@ const InfiniteDestinationCarousel = () => {
       {/* Heading Section */}
       <div className="text-center mb-8">
         <h2 className="text-2xl font-semibold text-gray-600 mb-2">
-          Book hotels in Trip-Swift
+          Travel with Trip-Swift
         </h2>
         <hr className="w-48 mx-auto border-t-2 border-gray-400 mb-2" />
         <p className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-4xl font-bold transition-transform duration-500 hover:scale-110">
