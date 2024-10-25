@@ -5,7 +5,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/flight-ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function Extras() {

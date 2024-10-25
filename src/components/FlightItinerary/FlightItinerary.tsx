@@ -87,7 +87,7 @@ export default function FlightItinerary({
   const [displayRazorpay, setDisplayRazorpay] = useState(false);
 
   const handleCreateOrder = async (amount: number, currency: string) => {
-    const response = await axios.post("http://localhost:3000/order", {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL_AIRLINE}/orders/create`, {
       amount: parseInt(selectedFlight.price.total) * 100,
       currency,
       flightOffers: [selectedFlight],

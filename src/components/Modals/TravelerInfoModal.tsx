@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/flight-ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/flight-ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@/components/ui/flight-ui/select";
+import { Input } from "@/components/ui/flight-ui/input";
+import { Label } from "@/components/ui/flight-ui/label";
 import { useFlightOffersStore } from "../context/flight-offers-provider";
 import { FormState, Traveler } from "@/store";
 

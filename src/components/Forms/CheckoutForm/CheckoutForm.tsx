@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/flight-ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Details from "@/components/Forms/CheckoutForm/Details";
 import { Card, CardContent } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/flight-ui/radio-group";
 import { Separator } from "@radix-ui/react-separator";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui/flight-ui/label";
 import Extras from "./Extras";
 import FlightItinerary from "@/components/FlightItinerary/FlightItinerary";
 import { useFlightOffersStore } from "@/components/context/flight-offers-provider";

@@ -1,5 +1,5 @@
 "use client";
-import flightImg from "@/assets/flight.png";
+import flightImg from "@/components/assets/flight.png";
 import Image from "next/image";
 
 type FlightInfoProps = {

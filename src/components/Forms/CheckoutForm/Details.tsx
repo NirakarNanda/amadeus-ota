@@ -1,16 +1,17 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/flight-ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@radix-ui/react-separator";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/flight-ui/checkbox";
+import { Input } from "@/components/ui/flight-ui/input";
+
+import { Label } from "@/components/ui/flight-ui/label";
 import { LuLuggage, LuBriefcase } from "react-icons/lu";
 import { useState } from "react";
 import TravelerInfoModal from "@/components/Modals/TravelerInfoModal";
 import { useFlightOffersStore } from "@/components/context/flight-offers-provider";
 import { FormState, Traveler } from "@/store";
-import { Luggage , CircleCheck } from "lucide-react";
+import { Luggage , Check } from "lucide-react";
 
 export default function Details({
   form,
@@ -55,7 +56,7 @@ export default function Details({
                 <h3 className="text-lg font-semibold mb-2">
                 {travelers.find((t) => t.id === traveler.travelerId)?.name?.firstName || traveler.travelerType}
                 </h3>
-                {travelers.find((t) => t.id === traveler.travelerId)?.name?.firstName && <CircleCheck className="absolute top-0 right-0 text-green-500"/>}
+                {travelers.find((t) => t.id === traveler.travelerId)?.name?.firstName && <Check className="absolute top-0 right-0 text-green-500"/>}
                 
                 <Button
                   variant="outline"

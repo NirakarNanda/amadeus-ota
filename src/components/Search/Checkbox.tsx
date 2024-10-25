@@ -62,20 +62,18 @@ const cabinClasses: CabinClass[] = [
             />
             <label htmlFor="multi-city">Multi City</label>
           </li> */}
-          <li className="flex items-center">
+          <li className="flex items-center border rounded-lg p-3 shadow-md hover:shadow-lg transition">
             <select
               name="cabinClass"
-              defaultValue={cabinClasses[0].name}
-              className="p-1 bg-transparent"
-              onChange={(e)=> updateSearchFormField("travelClass" , e.target.value)}
+              defaultValue={cabinClasses[0].value}
+              className="p-2 bg-transparent"
+              onChange={(e) => updateSearchFormField("travelClass", e.target.value)}
             >
-              {cabinClasses.map((el, index) => {
-                return (
-                  <option value={el.value} key={index}>
-                    {el.name}
-                  </option>
-                );
-              })}
+              {cabinClasses.map((el, index) => (
+                <option value={el.value} key={index}>
+                  {el.name}
+                </option>
+              ))}
             </select>
           </li>
           <li className="flex items-center">

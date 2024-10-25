@@ -216,6 +216,7 @@ export interface Name {
   lastName: string;
 }
 export type SearchFormState = {
+  includedAirlines: any;
   tripType: string;        // e.g. "one-way", "round-trip"
   travelClass: string;     // e.g. "economy", "business"
   directFlight: boolean;   // e.g. true for direct flights only
