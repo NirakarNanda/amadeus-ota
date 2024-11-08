@@ -167,7 +167,7 @@ const HotelCard = () => {
 
                     <button
                       onClick={handleSearch}
-                      className="w-full lg:w-auto bg-[#D80032] hover:bg-[#FF1E1E] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl flex items-center justify-center gap-2 transition-colors"
+                      className="w-full lg:w-auto bg-[#D80032] hover:bg-[#FF1E1E] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl flex items-center justify-center gap-2 transition-colors animate-pulse"
                     >
                       <Search className="w-4 h-4 sm:w-5 sm:h-5" />
                       <span>Search</span>
