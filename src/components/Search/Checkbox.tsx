@@ -3,91 +3,77 @@
 import React from "react";
 import { useFlightOffersStore } from "../context/flight-offers-provider";
 
-
 export type CabinClass = {
   name: string;
   value: string;
 };
+
 const Checkbox = () => {
-  const { updateSearchFormField , searchForm } =
-    useFlightOffersStore((state) => state);
+  const { updateSearchFormField, searchForm } = useFlightOffersStore((state) => state);
 
-
-// Create the array of cabin classes
-const cabinClasses: CabinClass[] = [
-  { name: "Economy", value: "ECONOMY" },
-  { name: "Premium economy", value: "PREMIUM_ECONOMY" },
-  { name: "Business", value: "BUSINESS" },
-  { name: "First class", value: "FIRST" },
-];
+  // Create the array of cabin classes
+  const cabinClasses: CabinClass[] = [
+    { name: "Economy", value: "ECONOMY" },
+    { name: "Premium Economy", value: "PREMIUM_ECONOMY" },
+    { name: "Business", value: "BUSINESS" },
+    { name: "First Class", value: "FIRST" },
+  ];
 
   return (
-    <div className="w-full px-2 pt-4">
-      <h2 className="text-3xl font-bold">Compare and book flights with ease</h2>
-      <div className="">
-        <p className="my-2">Discover your next dream destination</p>
-        <ul className="flex gap-6 mb-2 items-center">
-          <li className="flex items-center">
-            <input
-              type="radio"
-              name="tripType"
-              id="round-trip"
-              value="ROUNDTRIP"
-              checked={searchForm.tripType === 'ROUNDTRIP'}
-              className="scale-150 mr-3"
-              onChange={(e)=> updateSearchFormField("tripType" , e.target.value)}
-            />
-            <label htmlFor="round-trip">Round Trip</label>
-          </li>
+    <div className="w-full max-w-5xl mx-auto p-4 bg-white rounded-lg">
+      <h2 className="text-xl font-bold text-center text-gray-800 mb-4">
+        Compare and Book Flights with Ease
+      </h2>
 
-          <li className="flex items-center">
+      <div className="flex flex-wrap items-center gap-16">
+        {/* Trip Type Options */}
+        {["ROUNDTRIP", "ONEWAY"].map((type) => (
+          <div key={type} className="flex items-center">
             <input
               type="radio"
               name="tripType"
-              id="one-way"
-              value="ONEWAY"
-              checked={searchForm.tripType === 'ONEWAY'}
-              className="scale-150 mr-3"
-              onChange={(e)=> updateSearchFormField("tripType" , e.target.value)}
+              id={type.toLowerCase()}
+              value={type}
+              checked={searchForm.tripType === type}
+              className="scale-125 mr-2"
+              onChange={(e) => updateSearchFormField("tripType", e.target.value)}
             />
-            <label htmlFor="one-way">One Way</label>
-          </li>
+            <label htmlFor={type.toLowerCase()} className="text-gray-800">
+              {type === "ROUNDTRIP" ? "Round Trip" : "One Way"}
+            </label>
+          </div>
+        ))}
 
-          {/* <li className="flex items-center">
-            <input
-              type="radio"
-              name="tripType"
-              id="multi-city"
-              className="scale-150 mr-3"
-            />
-            <label htmlFor="multi-city">Multi City</label>
-          </li> */}
-          <li className="flex items-center border rounded-lg p-3 shadow-md hover:shadow-lg transition">
-            <select
-              name="cabinClass"
-              defaultValue={cabinClasses[0].value}
-              className="p-2 bg-transparent"
-              onChange={(e) => updateSearchFormField("travelClass", e.target.value)}
-            >
-              {cabinClasses.map((el, index) => (
-                <option value={el.value} key={index}>
-                  {el.name}
-                </option>
-              ))}
-            </select>
-          </li>
-          <li className="flex items-center">
-            <input
-              type="checkbox"
-              name="directFlight"
-              id="direct-flight"
-              className="scale-150 mr-3"
-              checked={searchForm.directFlight}
-              onChange={(e)=> updateSearchFormField("directFlight" , e.target.checked)}
-            />
-            <label htmlFor="direct-flight">Direct Flight</label>
-          </li>
-        </ul>
+        {/* Cabin Class Selector */}
+        <div className="flex items-center border rounded-lg p-2 shadow-sm hover:shadow-md transition-all w-auto">
+          <select
+            name="cabinClass"
+            defaultValue={cabinClasses[0].value}
+            className="p-2 bg-transparent focus:outline-none"
+            onChange={(e) => updateSearchFormField("travelClass", e.target.value)}
+          >
+            {cabinClasses.map((el) => (
+              <option value={el.value} key={el.value}>
+                {el.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Direct Flight Checkbox */}
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            name="directFlight"
+            id="direct-flight"
+            className="scale-125 mr-2"
+            checked={searchForm.directFlight}
+            onChange={(e) => updateSearchFormField("directFlight", e.target.checked)}
+          />
+          <label htmlFor="direct-flight" className="text-gray-800">
+            Direct Flight
+          </label>
+        </div>
       </div>
     </div>
   );

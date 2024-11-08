@@ -13,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/flight-ui/select";
-
 import { useFlightOffersStore } from "@/components/context/flight-offers-provider";
 
 // Define Child type
@@ -35,8 +34,7 @@ export default function Traveler({
   setChildren: (value: Child[] | ((prevChildren: Child[]) => Child[])) => void;
   onDone: () => void;
 }) {
-  const {updateSearchFormField } =
-    useFlightOffersStore((state) => state);
+  const { updateSearchFormField } = useFlightOffersStore((state) => state);
   const MAX_TRAVELERS = 9;
 
   // Calculate total travelers
@@ -56,23 +54,24 @@ export default function Traveler({
     e.preventDefault();
     if (totalTravelers >= MAX_TRAVELERS) return;
     // Add a new child with default age of 0
-    setChildren((prevChildren: Child[]) => {
-      return [...prevChildren, { id: prevChildren.length + 1, age: 0 }];
-    });
+    setChildren((prevChildren: Child[]) => [
+      ...prevChildren,
+      { id: prevChildren.length + 1, age: 0 },
+    ]);
   };
 
   const handleDecrementAdults = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    setAdults((prev) => Math.max(1, prev - 1)); // At least 1 adult
+    setAdults((prev) => Math.max(1, prev - 1));
   };
 
   const handleDecrementChildren = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
-    setChildren((prevChildren) => prevChildren.slice(0, -1)); // Remove the last child
+    setChildren((prevChildren) => prevChildren.slice(0, -1)); 
   };
 
   const handleChildAgeChange = (id: number, newAge: number) => {
@@ -83,38 +82,38 @@ export default function Traveler({
     );
   };
 
-  const handleDone = ()=>{
-    console.log(adults , "+====+" , child)
-    updateSearchFormField("adult" , adults)
-    updateSearchFormField("child" , child.length)
-  }
+  const handleDone = () => {
+    console.log(adults, "+====+", child);
+    updateSearchFormField("adult", adults);
+    updateSearchFormField("child", child.length);
+  };
 
   return (
-    <Card className="w-full max-w-sm mx-auto relative">
+    <Card className="w-full max-w-sm mx-auto relative bg-white/80 backdrop-blur-md shadow-lg rounded-lg border border-gray-300">
       <CardContent className="p-6">
         <div className="space-y-4">
           {/* Adults section */}
           <div className="flex items-center justify-between">
             <div>
               <Label htmlFor="adults">Adults</Label>
-              <div className="text-sm text-muted-foreground">Age 18+</div>
+              <div className="text-sm text-gray-500">Age 18+</div>
             </div>
             <div className="flex items-center">
-              <Button
+              <Button 
                 variant="outline"
                 size="icon"
-                className="h-8 w-8 rounded-full"
+                className="h-8 w-8 rounded-full text-gray-700"
                 onClick={handleDecrementAdults}
               >
                 -
               </Button>
-              <span className="h-8 w-16 mx-2 text-center flex items-center justify-center">
+              <span className="h-8 w-16 mx-2 text-center flex items-center justify-center text-gray-800">
                 {adults}
               </span>
               <Button
                 variant="outline"
                 size="icon"
-                className="h-8 w-8 rounded-full"
+                className="h-8 w-8 rounded-full text-gray-700"
                 onClick={handleIncrementAdults}
               >
                 +
@@ -126,24 +125,24 @@ export default function Traveler({
           <div className="flex items-center justify-between">
             <div>
               <Label htmlFor="children">Children</Label>
-              <div className="text-sm text-muted-foreground">Age 0 - 17</div>
+              <div className="text-sm text-gray-500">Age 0 - 17</div>
             </div>
             <div className="flex items-center">
               <Button
                 variant="outline"
                 size="icon"
-                className="h-8 w-8 rounded-full"
+                className="h-8 w-8 rounded-full text-gray-700"
                 onClick={handleDecrementChildren}
               >
                 -
               </Button>
-              <span className="h-8 w-16 mx-2 text-center flex items-center justify-center">
+              <span className="h-8 w-16 mx-2 text-center flex items-center justify-center text-gray-800">
                 {child.length}
               </span>
               <Button
                 variant="outline"
                 size="icon"
-                className="h-8 w-8 rounded-full"
+                className="h-8 w-8 rounded-full text-gray-700"
                 onClick={handleIncrementChildren}
               >
                 +
@@ -154,7 +153,7 @@ export default function Traveler({
           {/* Children Age Input */}
           {child.length > 0 && (
             <div className="space-y-4">
-              {child.map((el:any) => (
+              {child.map((el: any) => (
                 <div
                   key={el.id}
                   className="flex items-center justify-between"
@@ -168,10 +167,10 @@ export default function Traveler({
                       handleChildAgeChange(el.id, parseInt(value))
                     }
                   >
-                    <SelectTrigger className="w-[120px]">
+                    <SelectTrigger className="w-[120px] bg-gray-100">
                       <SelectValue placeholder="Select age" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       <SelectGroup>
                         <SelectLabel>Age</SelectLabel>
                         {Array.from(Array(18).keys()).map((age) => (
@@ -189,12 +188,16 @@ export default function Traveler({
         </div>
       </CardContent>
 
-      <CardFooter className="flex justify-between items-center p-6 pt-0">
-        <div>{totalTravelers} travelers</div>
-        <Button onClick={()=>{
-          handleDone()
-          onDone()
-        }} type="button">
+      <CardFooter className="flex justify-between items-center p-6 pt-0 bg-gray-50 border-t border-gray-200">
+        <div className="text-gray-800">{totalTravelers} travelers</div>
+        <Button
+          onClick={() => {
+            handleDone();
+            onDone();
+          }}
+          type="button"
+          className="bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        >
           Done
         </Button>
       </CardFooter>

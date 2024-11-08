@@ -73,7 +73,7 @@ const HotelCard = () => {
   };
 
   return (
-    <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] bg-gray-100">
+    <div className="relative w-full h-[300px] sm:h-[800px] md:h-[500px] bg-gray-100">
       <div className="relative w-full h-full">
         <div className="absolute inset-0 overflow-hidden rounded-b-[20px] sm:rounded-b-[40px]">
           {carouselImages.map((image, index) => (
