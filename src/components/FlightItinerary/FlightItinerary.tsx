@@ -11,7 +11,7 @@ import { useFlightOffersStore } from "../context/flight-offers-provider";
 import format from "date-fns/format";
 import { useRouter } from "next/navigation";
 
-import crypto from "crypto-js";
+import crypto from "crypto";
 import axios from "axios";
 
 // Function to load script and append in DOM tree.
@@ -148,66 +148,34 @@ export default function FlightItinerary({
       paymentId.current = response.razorpay_payment_id;
 
       // Most important step to capture and authorize the payment. This can be done of Backend server.
-      const succeeded =
-        crypto
-          .HmacSHA256(
-            `${orderDetails.orderId}|${response.razorpay_payment_id}`,
-            process.env.NEXT_PUBLIC_RAZORPAY_KEY_SECRET!
-          )
-          .toString() === response.razorpay_signature;
+      const hmac = crypto.createHmac('sha256', process.env.NEXT_PUBLIC_RAZORPAY_KEY_SECRET!);
+      hmac.update(`${orderDetails.orderId}|${response.razorpay_payment_id}`);
+      const generated_signature = hmac.digest('hex');
 
-      // If successfully authorized. Then we can consider the payment as successful.
+      const succeeded = generated_signature === response.razorpay_signature;
+
       if (succeeded) {
-        // handlePayment("succeeded", {
-        //   orderId,
-        //   paymentId,
-        //   signature: response.razorpay_signature,
-        // });
-        router.push("/app")
+        router.push("/app");
       } else {
-        // handlePayment("failed", {
-        //   orderId,
-        //   paymentId: response.razorpay_payment_id,
-        // });
-        router.push("/app")
+        router.push("/app");
       }
     },
     modal: {
-      confirm_close: true, // this is set to true, if we want confirmation when clicked on cross button.
-      // This function is executed when checkout modal is closed
-      // There can be 3 reasons when this modal is closed.
+      confirm_close: true,
       ondismiss: async (reason: any) => {
-        // Reason 1 - when payment is cancelled. It can happend when we click cross icon or cancel any payment explicitly.
         if (reason === undefined) {
           console.log("cancelled");
-          // handlePayment("Cancelled");
-        }
-        // Reason 2 - When modal is auto closed because of time out
-        else if (reason === "timeout") {
+        } else if (reason === "timeout") {
           console.log("timedout");
-          // handlePayment("timedout");
-        }
-        // Reason 3 - When payment gets failed.
-        else {
+        } else {
           console.log("failed");
-          // handlePayment("failed", {
-          //   paymentReason,
-          //   field,
-          //   step,
-          //   code,
-          // });
         }
       },
     },
-    // This property allows to enble/disable retries.
-    // This is enabled true by default.
     retry: {
       enabled: false,
     },
-    timeout: 900, // Time limit in Seconds
-    // theme: {
-    //   color: "", // Custom color for your checkout modal.
-    // },
+    timeout: 900,
   };
 
   const getAirlines = (oneWay: boolean) => {

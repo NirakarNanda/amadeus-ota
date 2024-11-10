@@ -28,7 +28,7 @@ export default function FlightsPage() {
     if (searchParams.toString() && (!storedOffers || !JSON.parse(storedOffers).data?.length)) {
       fetchFlights();
     }
-  }, [searchParams]);
+  }, [searchParams, setFlightOffers]);
 
   const fetchFlights = async () => {
     try {
