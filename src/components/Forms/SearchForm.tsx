@@ -30,7 +30,7 @@ const SearchForm: React.FC = () => {
   });
 
   const [isRotated, setIsRotated] = useState(false);
-  
+
   const { setFlightOffers, searchForm, updateSearchFormField } = useFlightOffersStore((state) => state);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -92,7 +92,7 @@ const SearchForm: React.FC = () => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate required fields
     if (!searchForm.origin?.value || !searchForm.destination?.value || !searchForm.departureDate) {
       setError("Please fill in all required fields");
@@ -131,7 +131,7 @@ const SearchForm: React.FC = () => {
       // Store the search parameters and results in localStorage
       localStorage.setItem('flightSearchParams', JSON.stringify(cleanedParams));
       localStorage.setItem('flightOffers', JSON.stringify(response.data));
-      
+
       setFlightOffers(response.data);
 
       // Convert search params to URL query string
@@ -152,9 +152,9 @@ const SearchForm: React.FC = () => {
 
   useEffect(() => {
     if (isRotated) {
-      const tempOrigin = { ...searchForm.origin }; 
+      const tempOrigin = { ...searchForm.origin };
       const tempDestination = { ...searchForm.destination };
-      
+
       updateSearchFormField("origin", tempDestination);
       updateSearchFormField("destination", tempOrigin);
     }
@@ -192,12 +192,12 @@ const SearchForm: React.FC = () => {
   }, [adults, children]);
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
+    <div className="container mx-auto px-4 py-4 ">
       <Card className="w-full max-w-6xl mx-auto">
-        <Checkbox/>
+        <Checkbox />
         <CardContent className="p-6">
           <form className="space-y-4" onSubmit={onSubmit}>
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4">
               <div className="md:col-span-4 space-y-2">
                 <div className="flex items-center space-x-2 text-sm text-gray-600 mb-1">
                   <PlaneTakeoff size={16} />
@@ -227,9 +227,8 @@ const SearchForm: React.FC = () => {
                   onClick={() => setIsRotated(!isRotated)}
                 >
                   <ArrowLeftRight
-                    className={`transform transition-transform duration-300 ${
-                      isRotated ? "rotate-180" : ""
-                    }`}
+                    className={`transform transition-transform duration-300 ${isRotated ? "rotate-180" : ""
+                      }`}
                     size={20}
                   />
                 </Button>
@@ -265,9 +264,9 @@ const SearchForm: React.FC = () => {
                     editable={false}
                     placeholder="Select dates"
                     value={[
-  searchForm.departureDate ? new Date(searchForm.departureDate) : new Date(),
-  searchForm.returnDate ? new Date(searchForm.returnDate) : new Date()
-]}
+                      searchForm.departureDate ? new Date(searchForm.departureDate) : new Date(),
+                      searchForm.returnDate ? new Date(searchForm.returnDate) : new Date()
+                    ]}
                     onChange={(value) => {
                       if (value && value[0] && value[1]) {
                         updateSearchFormField(
@@ -280,7 +279,7 @@ const SearchForm: React.FC = () => {
                         );
                       }
                     }}
-                  />  
+                  />
                 ) : (
                   <DatePicker
                     placeholder="Select date"
@@ -297,13 +296,13 @@ const SearchForm: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-4">
+            <div className="w-full flex flex-wrap gap-4 items-center justify-between pt-4">
               <Popover open={openTraveler} onOpenChange={setOpenTraveler}>
                 <PopoverTrigger asChild>
                   <Button
                     type="button"
                     variant="outline"
-                    className="flex items-center space-x-2"
+                    className="w-full md:w-auto flex items-center space-x-2"
                   >
                     <Users size={18} />
                     <span>
@@ -325,7 +324,7 @@ const SearchForm: React.FC = () => {
 
               <Button
                 type="submit"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+                className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-8"
                 disabled={loading}
               >
                 {loading ? (
@@ -345,7 +344,7 @@ const SearchForm: React.FC = () => {
           {error}
         </div>
       )}
-    </div>  
+    </div>
   );
 };
 

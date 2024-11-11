@@ -25,27 +25,29 @@ const Checkbox = () => {
         Compare and Book Flights with Ease
       </h2>
 
-      <div className="flex flex-wrap items-center gap-16">
+      <div className="flex flex-wrap items-center gap-4 md:gap-16">
         {/* Trip Type Options */}
-        {["ROUNDTRIP", "ONEWAY"].map((type) => (
-          <div key={type} className="flex items-center">
-            <input
-              type="radio"
-              name="tripType"
-              id={type.toLowerCase()}
-              value={type}
-              checked={searchForm.tripType === type}
-              className="scale-125 mr-2"
-              onChange={(e) => updateSearchFormField("tripType", e.target.value)}
-            />
-            <label htmlFor={type.toLowerCase()} className="text-gray-800">
-              {type === "ROUNDTRIP" ? "Round Trip" : "One Way"}
-            </label>
-          </div>
-        ))}
+        <div className="flex flex-col gap-2 md:flex-row md:gap-12 justify-center">
+          {["ROUNDTRIP", "ONEWAY"].map((type) => (
+            <div key={type} className="flex items-center">
+              <input
+                type="radio"
+                name="tripType"
+                id={type.toLowerCase()}
+                value={type}
+                checked={searchForm.tripType === type}
+                className="scale-125 mr-2"
+                onChange={(e) => updateSearchFormField("tripType", e.target.value)}
+              />
+              <label htmlFor={type.toLowerCase()} className="mt-2 text-gray-800">
+                {type === "ROUNDTRIP" ? "Round Trip" : "One Way"}
+              </label>
+            </div>
+          ))}
+        </div>
 
         {/* Cabin Class Selector */}
-        <div className="flex items-center border rounded-lg p-2 shadow-sm hover:shadow-md transition-all w-auto">
+        <div className="w-full md:w-auto flex items-center border rounded-lg p-2 shadow-sm hover:shadow-md transition-all">
           <select
             name="cabinClass"
             defaultValue={cabinClasses[0].value}
@@ -70,7 +72,7 @@ const Checkbox = () => {
             checked={searchForm.directFlight}
             onChange={(e) => updateSearchFormField("directFlight", e.target.checked)}
           />
-          <label htmlFor="direct-flight" className="text-gray-800">
+          <label htmlFor="direct-flight" className="mt-2 text-gray-800">
             Direct Flight
           </label>
         </div>
