@@ -33,7 +33,7 @@ export default function Details({
   const isReturnType = selectedFlight?.itineraries.length > 0
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container md:mx-auto md:p-4">
       {selectedFlight?.travelerPricings.map((traveler)=>{
        return <Card className="shadow-none mb-4" key={traveler.travelerId}>
         <CardContent>
@@ -83,7 +83,7 @@ export default function Details({
                 {selectedFlight?.travelerPricings
                 ?.at(0)
                 ?.fareDetailsBySegment.map((fareSeg: any) => {
-                  const baggageAmenities = fareSeg.amenities.filter(
+                  const baggageAmenities = fareSeg?.amenities?.filter(
                     (amenity: any) => amenity.amenityType === "BAGGAGE"
                   );
 

@@ -26,7 +26,7 @@ export default function Extras() {
             <SelectTrigger className="w-full">
               <SelectValue placeholder="No preference" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white">
               <SelectItem value="no-preference">No preference</SelectItem>
               <SelectItem value="vegetarian">Vegetarian - Free</SelectItem>
               <SelectItem value="vegan">Vegan - Free</SelectItem>

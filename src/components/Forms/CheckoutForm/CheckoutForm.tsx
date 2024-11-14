@@ -138,8 +138,8 @@ export default function CheckoutForm() {
         </h1>
       </div>
 
-      <div className="w-full flex justify-between">
-        <div className="w-[60%]">
+      <div className="w-full flex flex-col gap-4 md:flex-row  justify-between">
+        <div className="w-full md:w-[60%]">
           {steps[currentStep - 1].title === "Your details" && (
             <Details form={form} setForm={setForm} />
           )}

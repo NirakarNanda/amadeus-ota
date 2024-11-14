@@ -96,7 +96,7 @@ const TravelerInfoModal = ({
         open={openTravelerInfoModal}
         onOpenChange={setOpenTravelerInfoModal}
       >
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] h-[100%] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {selectedTraveler.name?.firstName ? selectedTraveler.name?.firstName : selectedTraveler.travelerType}
@@ -104,7 +104,7 @@ const TravelerInfoModal = ({
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="firstName" className="text-right">
+              <Label htmlFor="firstName" className="md:text-right">
                 First name
               </Label>
               <Input
@@ -117,7 +117,7 @@ const TravelerInfoModal = ({
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="lastName" className="text-right">
+              <Label htmlFor="lastName" className="md:text-right">
                 Last name
               </Label>
               <Input
@@ -128,7 +128,7 @@ const TravelerInfoModal = ({
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="gender" className="text-right">
+              <Label htmlFor="gender" className="md:text-right">
                 Gender
               </Label>
               <Select
@@ -138,7 +138,7 @@ const TravelerInfoModal = ({
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Select your gender" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   <SelectItem value="MALE">Male</SelectItem>
                   <SelectItem value="FEMALE">Female</SelectItem>
                   <SelectItem value="OTHER">Other</SelectItem>
@@ -146,7 +146,7 @@ const TravelerInfoModal = ({
               </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="dob" className="text-right">
+              <Label htmlFor="dob" className="md:text-right">
                 Date of birth
               </Label>
               <Input
@@ -161,7 +161,7 @@ const TravelerInfoModal = ({
              <div className="flex flex-col gap-2 mt-4">
              <h3 className="font-semibold">Contact details</h3>
              <div className="space-y-4">
-               <div>
+               <div className="space-y-1">
                  <Label htmlFor="email">Contact email*</Label>
                  <Input
                    id="email"
@@ -172,7 +172,7 @@ const TravelerInfoModal = ({
                    }
                  />
                </div>
-               <div>
+               <div className="space-y-1">
                  <Label htmlFor="phone">Phone number *</Label>
                  <div className="flex">
                    <select className="w-20 border rounded-l-md">
