@@ -92,10 +92,10 @@ const HotelList: React.FC = () => {
       setError(error instanceof Error ? error : new Error("An unknown error occurred"));
       setAllHotels([]);
       setFilteredHotels([]);
-      console.error("Error fetching hotels:", error);
+      // console.error("Error fetching hotels:", error);
 
       if (!errorToastShown) {
-        toast.error('Something went wrong, please try again later.');
+        toast.error('Please try modifying the search');
         setErrorToastShown(true);
       }
     } finally {
@@ -173,7 +173,7 @@ const HotelList: React.FC = () => {
     if (isLoading) return renderLoadingSkeleton();
 
     if (error) {
-      return <div className="text-center py-8">Something went wrong, please try again later.</div>;
+      return <div className="text-center py-8">0 Hotels available</div>;
     }
 
     if (!isLoading && filteredHotels.length === 0) {

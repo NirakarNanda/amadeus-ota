@@ -7,11 +7,8 @@ import Image from "next/image";
 import DateRange from "./DateRange";
 import GuestBox from "./GuestBox";
 import { getHotelsByCity } from '@/api/hotel';
-import { ChevronLeft, ChevronRight, Search, MapPin, Hotel, Plane } from 'lucide-react';
+import { Search, MapPin, Hotel, Plane, Loader2 } from 'lucide-react';
 import ParisImage from "../assets/popular/paris.jpg";
-import DubaiImage from "../assets/popular/dubai.jpg";
-import LondonImage from "../assets/popular/london.jpg";
-import SingaporeImage from "../assets/popular/singapore.jpg";
 import SearchForm from "../Forms/SearchForm";
 
 const HotelCard = () => {
@@ -19,33 +16,12 @@ const HotelCard = () => {
   const [dates, setDates] = useState<string[] | undefined>(undefined);
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<null | string>(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [activeTab, setActiveTab] = useState<'hotel' | 'flight'>('hotel');
+  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('hotel');
 
   const dispatch = useDispatch();
   const router = useRouter();
   const dateRangeDetails = useSelector((state) => state.hotel.dateRangeDetails);
-
-  const carouselImages = [
-    { url: ParisImage, alt: "Paris", city: "Paris, France" },
-    { url: DubaiImage, alt: "Dubai", city: "Dubai, UAE" },
-    { url: LondonImage, alt: "London", city: "London, UK" },
-    { url: SingaporeImage, alt: "Singapore", city: "Singapore" }
-  ];
-
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
-  };
-
-  React.useEffect(() => {
-    const timer = setInterval(nextSlide, 5000);
-    return () => clearInterval(timer);
-  }, []);
 
   const fetchSearchedProperties = useCallback(async (location: string) => {
     if (!location) return;
@@ -55,7 +31,7 @@ const HotelCard = () => {
       const hotelData = await getHotelsByCity(location);
       setHotels(hotelData.data || []);
     } catch (error) {
-      setError("Failed to fetch properties. Please try again.");
+      setError("0 hotels available");
     } finally {
       setLoading(false);
     }
@@ -76,41 +52,19 @@ const HotelCard = () => {
     <div className="relative w-full h-[300px] sm:h-[1000px] md:h-[500px] bg-gray-100">
       <div className="relative w-full h-full">
         <div className="absolute inset-0 overflow-hidden rounded-b-[20px] sm:rounded-b-[40px]">
-          {carouselImages.map((image, index) => (
-            <div
-              key={index}
-              className="absolute w-full h-full transition-transform duration-500 ease-in-out"
-              style={{
-                transform: `translateX(${(index - currentSlide) * 100}%)`,
-              }}
-            >
-              <Image
-                src={image.url}
-                alt={image.alt}
-                className="object-cover w-full h-full"
-                priority={index === 0}
-              />
-              <div className="absolute inset-0 bg-black/30" />
-              <div className="absolute bottom-[30%] sm:bottom-36 left-1/2 -translate-x-1/2 text-center w-full px-4">
-                <h2 className="text-white text-2xl sm:text-4xl font-bold mb-2">{image.city}</h2>
-                <p className="text-white/80 text-base sm:text-lg">Discover amazing stays</p>
-              </div>
+          {/* Static Paris Image */}
+          <div className="relative w-full h-full">
+            <Image
+              src={ParisImage}
+              alt="Paris"
+              className="object-cover w-full h-full"
+              priority
+            />
+            <div className="absolute inset-0 bg-black/30" />
+            <div className="absolute bottom-[30%] sm:bottom-36 left-1/2 -translate-x-1/2 text-center w-full px-4">
+              <p className="text-white/80 text-base sm:text-lg">Discover amazing stays</p>
             </div>
-          ))}
-
-          {/* Navigation Arrows */}
-          <button
-            onClick={prevSlide}
-            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all"
-          >
-            <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-          </button>
-          <button
-            onClick={nextSlide}
-            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all"
-          >
-            <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
-          </button>
+          </div>
 
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-full max-w-6xl px-4">
@@ -165,13 +119,22 @@ const HotelCard = () => {
                       <GuestBox />
                     </div>
 
-                    <button
-                      onClick={handleSearch}
-                      className="w-full lg:w-auto bg-[#D80032] hover:bg-[#FF1E1E] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl flex items-center justify-center gap-2 transition-colors animate-pulse"
-                    >
-                      <Search className="w-4 h-4 sm:w-5 sm:h-5" />
-                      <span>Search</span>
-                    </button>
+                    <div className="lg:col-span-2">
+                      <button
+                        onClick={handleSearch}
+                        disabled={loading}
+                        className="w-full h-full bg-[#D80032] hover:bg-[#FF1E1E] disabled:bg-gray-400 text-white px-6 py-4 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 font-medium text-lg shadow-lg shadow-red-500/30 disabled:shadow-none"
+                      >
+                        {loading ? (
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                        ) : (
+                          <>
+                            <Search className="w-5 h-5" />
+                            <span>Search</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <SearchForm />
