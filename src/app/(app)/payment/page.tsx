@@ -7,6 +7,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -16,10 +17,16 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
+
+  const authUser = useSelector((state: any) => state.authReducer.user);
+  // console.log("User in payment: ", authUser);
   
   const amount = parseInt(searchParams.get("amount") || "0", 10);
   const offerId = searchParams.get("offerId");
   const currency = searchParams.get("currency")?.toLowerCase();
+  const firstName = authUser?.firstName;
+  const lastName = authUser?.lastName;
+  const email = authUser?.email;
 
   return (
     <CheckAuthentication setLoading={setLoading}>
@@ -86,6 +93,9 @@ export default function Home() {
                   amount={amount} 
                   offerId={offerId as string} 
                   currency={currency as string}
+                  firstName={firstName as string}
+                  lastName={lastName as string}
+                  email={email as string}
                 />
               </Elements>
             </div>

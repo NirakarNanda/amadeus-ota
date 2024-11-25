@@ -10,7 +10,16 @@ import convertToSubcurrency from "@/lib/convertToSubcurrency";
 import axios from "axios";
 import router from "next/router";
 
-const CheckoutPage = ({ amount, offerId, currency }: { amount: number, offerId: string, currency: string }) => {
+type TCheckOutPageProps = {
+  amount: number;
+  offerId: string;
+  currency: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
+const CheckoutPage = ({ amount, offerId, currency, firstName, lastName, email }: TCheckOutPageProps) => {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -36,9 +45,9 @@ const CheckoutPage = ({ amount, offerId, currency }: { amount: number, offerId: 
     fetchClientSecret();
   }, [amount, offerId]);
 
-  
 
-  
+
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
@@ -59,7 +68,7 @@ const CheckoutPage = ({ amount, offerId, currency }: { amount: number, offerId: 
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/payment-success?amount=${amount}&offerId=${offerId}`,
+        return_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/payment-success?amount=${amount}&offerId=${offerId}&firstName=${firstName}&lastName=${lastName}&email=${email}`,
       },
     });
 
