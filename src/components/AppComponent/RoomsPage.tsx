@@ -70,7 +70,7 @@ const RoomsPage: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const propertyId = searchParams.get("id");
-  const checkInDate = searchParams.get("checkIn") || "2024-11-20";
+  const checkInDate = searchParams.get("checkin") || "2024-11-20";
   const adults = Number(searchParams.get("adults")) || 1;
 
   const [hotelOffers, setHotelOffers] = useState<HotelOffersResponse | null>(null);
