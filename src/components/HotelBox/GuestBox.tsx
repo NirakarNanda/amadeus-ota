@@ -15,7 +15,6 @@ const GuestBox: React.FC = () => {
   const [childAges, setChildAges] = useState(Array.from({ length: 0 }, () => 0));
   const [displayText, setDisplayText] = useState(` ${rooms} Rooms ${guests} Guests`);
 
-  // Prevent body scroll when modal is open
   useEffect(() => {
     if (modalOpen) {
       document.body.style.overflow = 'hidden';
