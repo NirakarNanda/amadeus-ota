@@ -8,8 +8,8 @@ import DateRange from "./DateRange";
 import GuestBox from "./GuestBox";
 import { getHotelsByCity } from '@/api/hotel';
 import { Search, MapPin, Hotel, Plane, Loader2 } from 'lucide-react';
-import ParisImage from "../assets/popular/paris.jpg";
 import SearchForm from "../Forms/SearchForm";
+import tokyo from "@/components/assets/popular/tokyo.jpg";
 
 const HotelCard = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,11 +51,11 @@ const HotelCard = () => {
   return (
     <div className="relative w-full h-[300px] sm:h-[1000px] md:h-[500px] bg-gray-100">
       <div className="relative w-full h-full">
-        <div className="absolute inset-0 overflow-hidden rounded-b-[20px] sm:rounded-b-[40px]">
+        <div className="absolute inset-0 overflow-hidden">
           {/* Static Paris Image */}
           <div className="relative w-full h-full">
             <Image
-              src={ParisImage}
+              src={tokyo}
               alt="Paris"
               className="object-cover w-full h-full"
               priority

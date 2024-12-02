@@ -1,9 +1,11 @@
 import RoomsPage from '@/components/AppComponent/RoomsPage'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 const page = () => {
   return (
-    <RoomsPage/>
+    <Suspense>
+      <RoomsPage/>
+    </Suspense>
   )
 }
 

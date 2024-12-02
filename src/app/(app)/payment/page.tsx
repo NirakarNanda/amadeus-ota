@@ -5,8 +5,8 @@ import CheckoutPage from "@/components/Stripe/checkoutPage";
 import convertToSubcurrency from "@/lib/convertToSubcurrency";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
 import { useSelector } from "react-redux";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
@@ -14,12 +14,10 @@ if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
 }
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
-export default function Home() {
+function PaymentPageContent() {
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
-
   const authUser = useSelector((state: any) => state.authReducer.user);
-  // console.log("User in payment: ", authUser);
   
   const amount = parseInt(searchParams.get("amount") || "0", 10);
   const offerId = searchParams.get("offerId");
@@ -27,6 +25,15 @@ export default function Home() {
   const firstName = authUser?.firstName;
   const lastName = authUser?.lastName;
   const email = authUser?.email;
+
+  // Add a loading or error state handler
+  if (!searchParams || !amount) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900">
+        <div className="text-white text-xl">Invalid payment information</div>
+      </div>
+    );
+  }
 
   return (
     <CheckAuthentication setLoading={setLoading}>
@@ -123,5 +130,17 @@ export default function Home() {
         }
       `}</style>
     </CheckAuthentication>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900">
+        <div className="text-white text-xl">Loading payment information...</div>
+      </div>
+    }>
+      <PaymentPageContent />
+    </Suspense>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Login from "./authLogin";
 
 type Props = {};
@@ -6,7 +6,7 @@ type Props = {};
 const page = (props: Props) => {
   return (
     <div>
-      <Login />
+      <Suspense><Login /></Suspense>
     </div>
   );
 };

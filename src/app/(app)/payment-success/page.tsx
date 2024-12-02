@@ -157,6 +157,8 @@
 
 
 // /pages/payment-success.jsx
+
+// /pages/payment-success.jsx
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { buildHotelBookingPayload } from "@/utils/bookingPayloadBuilder";
@@ -213,7 +215,7 @@ export default function PaymentSuccess({ searchParams: { amount, offerId, firstN
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4" className="text-green-500" />
             </svg>
             <h1 className="text-4xl font-extrabold text-white mt-6">Thank you for your booking!</h1>
-            <p className="text-lg text-gray-200 mt-4">We’ve received your payment of <span className="font-semibold">${amount}</span> and your booking has been confirmed.</p>
+            <p className="text-lg text-gray-200 mt-4">We've received your payment of <span className="font-semibold">${amount}</span> and your booking has been confirmed.</p>
           </div>
           <BookingDetails booking={booking} amount={amount} />
         </div>
