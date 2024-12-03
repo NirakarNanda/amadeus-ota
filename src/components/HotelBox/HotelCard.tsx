@@ -117,7 +117,7 @@ const HotelCard = () => {
                       </div>
                     </div>
 
-                    <div className="w-full lg:w-auto">
+                    <div className="w-full lg:w-auto h-[33px]">
                       <GuestBox />
                     </div>
 
