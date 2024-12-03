@@ -106,24 +106,26 @@ const HotelCard = () => {
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           placeholder="Where are you going?"
-                          className="w-full pl-10 pr-4 py-2 rounded-xl border-2 border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm sm:text-base transition duration-200 ease-in-out hover:border-blue-300"
+                          className="w-full h-[33px] pl-10 pr-4 py-2 rounded-xl border-2 border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-sm sm:text-base transition duration-200 ease-in-out hover:border-blue-300"
                         />
                       </div>
                     </div>
 
-                    <div className="w-full lg:w-auto">
-                      <DateRange dates={dates} setDates={setDates} />
+                    <div >
+                      <div className="border-2 border-gray-200 rounded-xl focus-within:ring-2 focus-within:ring-blue-500">
+                        <DateRange dates={dates} setDates={setDates} />
+                      </div>
                     </div>
 
                     <div className="w-full lg:w-auto">
                       <GuestBox />
                     </div>
 
-                    <div className="lg:col-span-2">
+                    <div className="">
                       <button
                         onClick={handleSearch}
                         disabled={loading}
-                        className="w-full h-full bg-[#D80032] hover:bg-[#FF1E1E] disabled:bg-gray-400 text-white px-6 py-4 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 font-medium text-lg shadow-lg shadow-red-500/30 disabled:shadow-none"
+                        className="w-full h-[33px] bg-[#D80032] hover:bg-[#FF1E1E] disabled:bg-gray-400 text-white px-6 py-3 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 font-medium text-lg shadow-lg shadow-red-500/30 disabled:shadow-none"
                       >
                         {loading ? (
                           <Loader2 className="w-5 h-5 animate-spin" />

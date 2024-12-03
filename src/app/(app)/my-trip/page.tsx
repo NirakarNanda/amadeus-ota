@@ -59,7 +59,7 @@ export default function BookingTabs() {
         setBookings(response.data);
         setLoading(false);
       } catch (err) {
-        setError('Failed to fetch bookings');
+        setError("There is no booking");
         setLoading(false);
       }
     };
