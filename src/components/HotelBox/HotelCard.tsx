@@ -9,7 +9,7 @@ import GuestBox from "./GuestBox";
 import { getHotelsByCity } from '@/api/hotel';
 import { Search, MapPin, Hotel, Plane, Loader2 } from 'lucide-react';
 import SearchForm from "../Forms/SearchForm";
-import tokyo from "@/components/assets/popular/tokyo.jpg";
+import Home from "@/components/assets/popular/Home.jpg";
 
 const HotelCard = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -55,8 +55,8 @@ const HotelCard = () => {
           {/* Static Paris Image */}
           <div className="relative w-full h-full">
             <Image
-              src={tokyo}
-              alt="Paris"
+              src={Home}
+              alt="Hotel"
               className="object-cover w-full h-full"
               priority
             />
