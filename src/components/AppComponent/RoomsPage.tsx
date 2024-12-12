@@ -54,10 +54,10 @@ interface HotelOffersResponse {
 }
 
 // API function to fetch hotel offers
-const getMultiHotelOffer = async (hotelId: string, adults: number, checkIn: string) => {
+const getMultiHotelOffer = async (hotelId: string, adults: number, checkIn: string, checkOut: string) => {
   try {
     const result = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/amadeus/shopping-/hotels-offer?hotelId=${hotelId}&adults=${adults}&checkIn=${checkIn}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/amadeus/shopping-/hotels-offer?hotelId=${hotelId}&adults=${adults}&checkIn=${checkIn}&checkOut=${checkOut}`
     );
     return result.data;
   } catch (error) {
@@ -71,6 +71,7 @@ const RoomsPage: React.FC = () => {
   const searchParams = useSearchParams();
   const propertyId = searchParams.get("id");
   const checkInDate = searchParams.get("checkin") || "2024-11-20";
+  const checkOutDate = searchParams.get("checkout") || "2024-12-24";
   const adults = Number(searchParams.get("adults")) || 1;
 
   const [hotelOffers, setHotelOffers] = useState<HotelOffersResponse | null>(null);
@@ -85,7 +86,7 @@ const RoomsPage: React.FC = () => {
 
       setIsLoading(true);
       try {
-        const response = await getMultiHotelOffer(propertyId, adults, checkInDate);
+        const response = await getMultiHotelOffer(propertyId, adults, checkInDate, checkOutDate);
         setHotelOffers(response);
       } catch (error) {
         console.error("Error fetching hotel offers:", error);
