@@ -14,6 +14,8 @@ interface Booking {
   total: number;
   currency: string;
   roomQuantity: number;
+  checkInDate: string;
+  checkOutDate: string;
   method: string;
   createdAt: string;
   hotel: {
@@ -56,6 +58,7 @@ export default function BookingTabs() {
             },
           }
         );
+        console.log("Bookings: ", response.data)
         setBookings(response.data);
         setLoading(false);
       } catch (err) {
@@ -132,6 +135,12 @@ export default function BookingTabs() {
                     </p>
                     <p className="mb-2">
                       <span className="font-semibold">Total Cost:</span> {booking.total} {booking.currency}
+                    </p>
+                    <p className="mb-2">
+                      <span className="font-semibold">Check In:</span> {formatDate(booking.checkInDate)}
+                    </p>
+                    <p className="mb-2">
+                      <span className="font-semibold">Check Out:</span> {formatDate(booking.checkOutDate)}
                     </p>
                     <p className="mb-2">
                       <span className="font-semibold">Payment Method:</span> {booking.method}
